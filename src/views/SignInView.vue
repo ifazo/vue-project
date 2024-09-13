@@ -21,6 +21,7 @@
     <body class="h-full">
     ```
   -->
+  <Toast />
   <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <img
@@ -73,7 +74,6 @@
         </div>
 
         <div>
-          <Toast />
           <button
             type="submit"
             class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -134,6 +134,14 @@ import { useToast } from 'primevue/usetoast'
 
 const toast = useToast()
 
+// const showSuccess = () => {
+//   toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+// };
+
+// const showError = () => {
+//   toast.add({ severity: 'error', summary: 'Error Message', detail: 'Message Content', life: 3000 });
+// };
+
 const form = ref({
   email: '',
   password: ''
@@ -150,6 +158,9 @@ const handleSignIn = () => {
         life: 3000
       })
     })
+    .then(() => {
+      window.location.href = '/dashboard'
+    })
     .catch((err) => {
       toast.add({ severity: 'error', summary: 'Error', detail: err.message, life: 3000 })
     })
@@ -164,6 +175,9 @@ const handleGoogleSignIn = () => {
         detail: 'Google sign in successfully!',
         life: 3000
       })
+    })
+    .then(() => {
+      window.location.href = '/dashboard'
     })
     .catch((err) => {
       toast.add({ severity: 'error', summary: 'Error', detail: err.message, life: 3000 })

@@ -37,7 +37,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 // const analytics = getAnalytics(app);
-const auth = getAuth(app)
+export const auth = getAuth(app)
 
 export default app
 
@@ -50,6 +50,10 @@ export const signUp = (email: string, password: string) => {
 
 export const signIn = (email: string, password: string) => {
   return signInWithEmailAndPassword(auth, email, password)
+}
+
+export const signOut = () => {
+  return auth.signOut()
 }
 
 export const signInWithGoogle = () => {

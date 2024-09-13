@@ -1,7 +1,15 @@
-<script setup lang="ts"></script>
-
 <template>
   <main>
-    <h1 class="text-3xl font-bold underline">Hello world!</h1>
+    <CtaPanel />
+    <TopCarousel />
+    <LogoSection />
   </main>
 </template>
+
+<script setup lang="ts">
+import CtaPanel from '@/components/CtaPanel.vue'
+import TopCarousel from '@/components/TopCarousel.vue'
+import LogoSection from '@/components/LogoSection.vue'
+</script>
+
+<style scoped></style>

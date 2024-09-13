@@ -6,7 +6,7 @@
     >
       <div class="flex lg:flex-1">
         <RouterLink class="-m-1.5 p-1.5" to="/">
-          <span class="sr-only">Your Company</span>
+          <span class="sr-only">Your Logo</span>
           <img
             class="h-8 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -29,7 +29,7 @@
           <PopoverButton
             class="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
           >
-            Product
+            Category
             <ChevronDownIcon class="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
           </PopoverButton>
 
@@ -46,7 +46,7 @@
             >
               <div class="p-4">
                 <div
-                  v-for="item in products"
+                  v-for="item in categories"
                   :key="item.name"
                   class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
                 >
@@ -111,7 +111,7 @@
       >
         <div class="flex items-center justify-between">
           <a href="#" class="-m-1.5 p-1.5">
-            <span class="sr-only">Your Company</span>
+            <span class="sr-only">Your Logo</span>
             <img
               class="h-8 w-auto"
               src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -134,7 +134,7 @@
                 <DisclosureButton
                   class="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Product
+                  Category
                   <ChevronDownIcon
                     :class="[open ? 'rotate-180' : '', 'h-5 w-5 flex-none']"
                     aria-hidden="true"
@@ -142,7 +142,7 @@
                 </DisclosureButton>
                 <DisclosurePanel class="mt-2 space-y-2">
                   <DisclosureButton
-                    v-for="item in [...products, ...callsToAction]"
+                    v-for="item in [...categories, ...callsToAction]"
                     :key="item.name"
                     as="a"
                     :href="item.href"
@@ -155,25 +155,39 @@
               <RouterLink
                 to="/products"
                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >Products</RouterLink
+              >
+                Products</RouterLink
               >
               <RouterLink
                 to="/blogs"
                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >Blogs</RouterLink
+              >
+                Blogs</RouterLink
               >
               <RouterLink
                 to="/dashboard"
                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >Dashboard</RouterLink
+              >
+                Dashboard</RouterLink
               >
             </div>
             <div class="py-6">
-              <RouterLink
-                to="/sign-in"
-                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >Sign in
-              </RouterLink>
+              <!-- <span v-if="isLoggedIn">
+                <button
+                  class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  @click="signOutUser"
+                >
+                  Sign out
+                </button>
+              </span> -->
+              <span>
+                <RouterLink
+                  to="/sign-in"
+                  class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  Sign in
+                </RouterLink>
+              </span>
             </div>
           </div>
         </div>
@@ -182,7 +196,7 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
@@ -207,41 +221,35 @@ import {
 } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
 
-const products = [
+const categories = [
   {
-    name: 'Analytics',
-    description: 'Get a better understanding of your traffic',
-    href: '#',
+    name: 'Shirts',
+    description: 'T-Shirts, Polos, Long Sleeve',
+    href: '/products/shirts',
     icon: ChartPieIcon
   },
   {
-    name: 'Engagement',
-    description: 'Speak directly to your customers',
-    href: '#',
+    name: 'Pants',
+    description: 'Jeans, Chinos, Sweatpants',
+    href: '/products/pants',
     icon: CursorArrowRaysIcon
   },
   {
-    name: 'Security',
-    description: 'Your customers’ data will be safe and secure',
-    href: '#',
+    name: 'Shoes',
+    description: 'Sneakers, Boots, Sandals',
+    href: '/products/shoes',
     icon: FingerPrintIcon
   },
   {
-    name: 'Integrations',
-    description: 'Connect with third-party tools',
-    href: '#',
+    name: 'Accessories',
+    description: 'Hats, Watches, Sunglasses',
+    href: '/products/accessories',
     icon: SquaresPlusIcon
-  },
-  {
-    name: 'Automations',
-    description: 'Build strategic funnels that will convert',
-    href: '#',
-    icon: ArrowPathIcon
   }
 ]
 const callsToAction = [
-  { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-  { name: 'Contact sales', href: '#', icon: PhoneIcon }
+  { name: 'On sale', href: '/', icon: PlayCircleIcon },
+  { name: 'Contact us', href: '/', icon: PhoneIcon }
 ]
 
 const mobileMenuOpen = ref(false)

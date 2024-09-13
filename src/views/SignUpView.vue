@@ -21,6 +21,7 @@
     <body class="h-full">
     ```
   -->
+  <Toast />
   <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <img
@@ -73,7 +74,6 @@
         </div>
 
         <div>
-          <Toast />
           <button
             type="submit"
             @click="handleSignUp()"
@@ -146,9 +146,12 @@ const handleSignUp = () => {
       toast.add({
         severity: 'success',
         summary: 'Success',
-        detail: 'Sign up user successfully!',
+        detail: 'User create successfully!',
         life: 3000
       })
+    })
+    .then(() => {
+      window.location.href = '/dashboard'
     })
     .catch((err) => {
       toast.add({ severity: 'error', summary: 'Error', detail: err.message, life: 3000 })
@@ -161,9 +164,12 @@ const handleGoogleSignIn = () => {
       toast.add({
         severity: 'success',
         summary: 'Success',
-        detail: 'Sign up user by google successfully!',
+        detail: 'User create by google successfully!',
         life: 3000
       })
+    })
+    .then(() => {
+      window.location.href = '/dashboard'
     })
     .catch((err) => {
       toast.add({ severity: 'error', summary: 'Error', detail: err.message, life: 3000 })
