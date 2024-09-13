@@ -1,9 +1,11 @@
 <template>
   <div>
-    <p>Product with id:</p>
+    <ProductDetails />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ProductDetails from '@/components/ProductDetails.vue'
+</script>
 
 <style scoped></style>

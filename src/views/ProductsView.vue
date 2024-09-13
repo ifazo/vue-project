@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <h6>Products page</h6>
-  </div>
+  <main>
+    <ProductLayout />
+  </main>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ProductLayout from '@/layouts/ProductLayout.vue'
+</script>
 
 <style scoped></style>

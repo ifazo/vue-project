@@ -98,7 +98,11 @@
         >
       </PopoverGroup>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <RouterLink to="/sign-in" class="text-sm font-semibold leading-6 text-gray-900"
+        <button v-if="isLoggedIn" @click="signOut" class="text-sm font-semibold leading-6 text-gray-900"
+          >Sign out
+          <span aria-hidden="true">&rarr;</span>
+      </button>
+        <RouterLink v-else to="/sign-in" class="text-sm font-semibold leading-6 text-gray-900"
           >Sign in
           <span aria-hidden="true">&rarr;</span>
         </RouterLink>
@@ -172,15 +176,15 @@
               >
             </div>
             <div class="py-6">
-              <!-- <span v-if="isLoggedIn">
+              <span v-if="isLoggedIn">
                 <button
                   class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  @click="signOutUser"
+                  @click="signOut"
                 >
                   Sign out
                 </button>
-              </span> -->
-              <span>
+              </span>
+              <span v-else>
                 <RouterLink
                   to="/sign-in"
                   class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
@@ -253,4 +257,11 @@ const callsToAction = [
 ]
 
 const mobileMenuOpen = ref(false)
+const isLoggedIn = ref(false)
+
+const signOut = () => {
+  isLoggedIn.value = false
+  mobileMenuOpen.value = false
+}
+
 </script>
