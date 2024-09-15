@@ -1,22 +1,9 @@
-<!--
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/typography'),
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
--->
 <template>
+    <Toast />
     <div class="bg-white">
+        <div class="card flex justify-between">
+            <Breadcrumb :home="home" :model="items" />
+        </div>
         <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
                 <!-- Image gallery -->
@@ -54,7 +41,7 @@
 
                     <div class="mt-3">
                         <h2 class="sr-only">Product information</h2>
-                        <p class="text-3xl text-gray-900">{{ product.price }}</p>
+                        <p class="text-3xl text-gray-900">${{ product.price }}</p>
                     </div>
 
                     <!-- Reviews -->
@@ -100,14 +87,15 @@
                         </div>
 
                         <div class="mt-10 flex sm:flex-col1">
-                            <button type="submit"
-                                class="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">Add
-                                to bag</button>
+                            <button type="button" @click="addToCartHandler"
+                                class="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">
+                                Add to cart
+                            </button>
 
-                            <button type="button"
+                            <button type="button" @click="addToWishlistHandler"
                                 class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                                 <HeartIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
-                                <span class="sr-only">Add to favorites</span>
+                                <span class="sr-only">Add to wishlist</span>
                             </button>
                         </div>
                     </form>
@@ -116,32 +104,26 @@
                         <h2 id="details-heading" class="sr-only">Additional details</h2>
 
                         <div class="border-t divide-y divide-gray-200">
-                            <Disclosure as="div" v-for="detail in product.details" :key="detail.name" v-slot="{ open }">
+                            <div v-for="detail in product.details" :key="detail.name">
                                 <h3>
-                                    <DisclosureButton
-                                        class="group relative w-full py-6 flex justify-between items-center text-left">
-                                        <span
-                                            :class="[open ? 'text-indigo-600' : 'text-gray-900', 'text-sm font-medium']">
+                                    <button
+                                        class="group relative w-full py-6 flex justify-between items-center text-left"
+                                        disabled>
+                                        <span class="text-indigo-600 text-sm font-medium">
                                             {{ detail.name }}
                                         </span>
-                                        <span class="ml-6 flex items-center">
-                                            <PlusIcon v-if="!open"
-                                                class="block h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                                aria-hidden="true" />
-                                            <MinusIcon v-else
-                                                class="block h-6 w-6 text-indigo-400 group-hover:text-indigo-500"
-                                                aria-hidden="true" />
-                                        </span>
-                                    </DisclosureButton>
+                                    </button>
                                 </h3>
-                                <DisclosurePanel as="div" class="pb-6 prose prose-sm">
+                                <!-- Always display the content -->
+                                <div class="pb-6 prose prose-sm">
                                     <ul role="list">
                                         <li v-for="item in detail.items" :key="item">{{ item }}</li>
                                     </ul>
-                                </DisclosurePanel>
-                            </Disclosure>
+                                </div>
+                            </div>
                         </div>
                     </section>
+
                 </div>
             </div>
         </div>
@@ -151,9 +133,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
     RadioGroup,
     RadioGroupLabel,
     RadioGroupOption,
@@ -164,12 +143,25 @@ import {
     TabPanels,
 } from '@headlessui/vue'
 import { StarIcon } from '@heroicons/vue/20/solid'
-import { HeartIcon, MinusIcon, PlusIcon } from '@heroicons/vue/24/outline'
+import { HeartIcon } from '@heroicons/vue/24/outline'
+import Breadcrumb from 'primevue/breadcrumb';
+
+const home = ref({
+    icon: 'pi pi-home'
+});
+const items = ref([
+    { label: 'Electronics' },
+    { label: 'Computer' },
+    { label: 'Accessories' },
+    { label: 'Keyboard' },
+    { label: 'Wireless' }
+]);
 
 // Product data
 const product = {
+    id: 1,
     name: 'Zip Tote Basket',
-    price: '$140',
+    price: 140,
     rating: 4,
     images: [
         {
@@ -222,7 +214,39 @@ const product = {
     ],
 }
 
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
+import { useCartStore } from '@/stores/cart'
+import { useWishlistStore } from '@/stores/wishlist';
+
+const toast = useToast()
+
 // State for selected color
 const selectedColor = ref(product.colors[0])
+
+// Access the Pinia cart store
+const cartStore = useCartStore()
+const wishlistStore = useWishlistStore()
+
+// Handle adding the product to the cart
+const addToCartHandler = () => {
+    const cartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+    }
+    cartStore.addToCart(cartItem)
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Product added to cart', life: 3000 })
+}
+
+const addToWishlistHandler = () => {
+    const wishlistItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+    }
+    wishlistStore.addToWishlist(wishlistItem)
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Product added to wishlist', life: 3000 })
+}
 
 </script>
