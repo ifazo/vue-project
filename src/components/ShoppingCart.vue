@@ -86,7 +86,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { CheckIcon, ClockIcon } from '@heroicons/vue/20/solid'
 
 const products = [

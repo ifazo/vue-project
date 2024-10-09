@@ -6,7 +6,7 @@
   </main>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import CtaPanel from '@/components/CtaPanel.vue'
 import CategoryPreview from '@/components/CategoryPreview.vue'
 import LogoSection from '@/components/LogoSection.vue'

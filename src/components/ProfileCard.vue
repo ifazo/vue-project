@@ -32,7 +32,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, reactive } from 'vue';
 
 const user = reactive({

@@ -34,7 +34,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const products = [
     {
         id: 1,

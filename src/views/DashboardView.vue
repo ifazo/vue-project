@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import Tabs from 'primevue/tabs';
 import TabList from 'primevue/tablist';
 import Tab from 'primevue/tab';

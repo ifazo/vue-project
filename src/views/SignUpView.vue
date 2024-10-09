@@ -121,7 +121,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { signInWithGoogle, signUp } from '@/lib/firebase'
 import { ref } from 'vue'
 import Toast from 'primevue/toast'

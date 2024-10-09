@@ -129,7 +129,7 @@
   </header>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import {

@@ -4,7 +4,7 @@
   </main>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import ProductLayout from '@/layouts/ProductLayout.vue'
 </script>
 

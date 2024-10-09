@@ -44,11 +44,11 @@ export default app
 const googleProvider = new GoogleAuthProvider()
 const githubProvider = new GithubAuthProvider()
 
-export const signUp = (email: string, password: string) => {
+export const signUp = (email, password) => {
   return createUserWithEmailAndPassword(auth, email, password)
 }
 
-export const signIn = (email: string, password: string) => {
+export const signIn = (email, password) => {
   return signInWithEmailAndPassword(auth, email, password)
 }
 
