@@ -1,19 +1,3 @@
-<!--
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
     <div class="bg-white">
         <!-- Mobile filter dialog -->
@@ -171,15 +155,16 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Active filters -->
-            <ProductList />
         </section>
+        <!-- Active filters -->
+        <div v-if="loading">Loading products...</div>
+        <div v-if="error" class="text-red-500">{{ error }}</div>
+        <ProductList v-if="!loading && !error" :products="products" />
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import {
     Dialog,
     DialogOverlay,
@@ -239,5 +224,29 @@ const filters = [
 ]
 
 const open = ref(false)
+const products = ref([]);
+const loading = ref(true);
+const error = ref(null);
 
+const fetchProducts = async () => {
+    try {
+        const response = await fetch(`https://ifaz-vue-server.vercel.app/api/products`); 
+        
+        const data = await response.json();
+        // console.log("Fetched products:", data.products);
+        products.value = data.products;
+        loading.value = false;
+    } catch (err) {
+        error.value = err.message;
+        loading.value = false;
+    }
+};
+
+onMounted(() => {
+    fetchProducts();
+});
+
+watch(products, (newProducts) => {
+    console.log("Fetched products:", products.value.products);
+});
 </script>

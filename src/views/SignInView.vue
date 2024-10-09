@@ -1,141 +1,129 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
   <!--
-    This example requires updating your template:
-
-    ```
-    <html class="h-full bg-white">
-    <body class="h-full">
-    ```
-  -->
+      This example requires updating your template:
+  
+      ```
+      <html class="h-full bg-white">
+      <body class="h-full">
+      ```
+    -->
   <Toast />
-  <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-        Sign in to your account
-      </h2>
-    </div>
-
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form @submit.prevent="submitForm" class="space-y-6" action="#" method="POST">
+  <div class="h-full bg-white flex min-h-full flex-1">
+    <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+      <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900"
-            >Email address</label
-          >
-          <div class="mt-2">
-            <input
-              v-model="form.email"
-              type="email"
-              autocomplete="email"
-              required
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <h2 class="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+          <p class="mt-2 text-sm leading-6 text-gray-500">
+            Don't have an account?
+            {{ ' ' }}
+            <RouterLink to="/sign-up" class="font-semibold text-indigo-600 hover:text-indigo-500">Create new account
+            </RouterLink>
+          </p>
         </div>
 
-        <div>
-          <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm font-medium leading-6 text-gray-900"
-              >Password</label
-            >
-            <div class="text-sm">
-              <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500"
-                >Forgot password?</a
-              >
+        <div class="mt-10">
+          <div>
+            <form @submit.prevent="submitForm" class="space-y-6">
+              <div>
+                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                <div class="mt-2">
+                  <input v-model="form.email" type="email" autocomplete="email" required
+                    class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                </div>
+              </div>
+
+              <div>
+                <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                <div class="mt-2">
+                  <input v-model="form.password" type="password" autocomplete="current-password" required
+                    class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <input id="remember-me" name="remember-me" type="checkbox"
+                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                  <label for="remember-me" class="ml-3 block text-sm leading-6 text-gray-700">Remember me</label>
+                </div>
+
+                <div class="text-sm leading-6">
+                  <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                </div>
+              </div>
+
+              <div>
+                <button type="submit"
+                  class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign
+                  in</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="mt-10">
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-gray-200" />
+              </div>
+              <div class="relative flex justify-center text-sm font-medium leading-6">
+                <span class="bg-white px-6 text-gray-900">Or continue with</span>
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-4">
+              <button type="button" @click="handleGoogleSignIn()"
+                class="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent">
+                <svg class="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
+                  <path
+                    d="M12.0003 4.75C13.7703 4.75 15.3553 5.36002 16.6053 6.54998L20.0303 3.125C17.9502 1.19 15.2353 0 12.0003 0C7.31028 0 3.25527 2.69 1.28027 6.60998L5.27028 9.70498C6.21525 6.86002 8.87028 4.75 12.0003 4.75Z"
+                    fill="#EA4335" />
+                  <path
+                    d="M23.49 12.275C23.49 11.49 23.415 10.73 23.3 10H12V14.51H18.47C18.18 15.99 17.34 17.25 16.08 18.1L19.945 21.1C22.2 19.01 23.49 15.92 23.49 12.275Z"
+                    fill="#4285F4" />
+                  <path
+                    d="M5.26498 14.2949C5.02498 13.5699 4.88501 12.7999 4.88501 11.9999C4.88501 11.1999 5.01998 10.4299 5.26498 9.7049L1.275 6.60986C0.46 8.22986 0 10.0599 0 11.9999C0 13.9399 0.46 15.7699 1.28 17.3899L5.26498 14.2949Z"
+                    fill="#FBBC05" />
+                  <path
+                    d="M12.0004 24.0001C15.2404 24.0001 17.9654 22.935 19.9454 21.095L16.0804 18.095C15.0054 18.82 13.6204 19.245 12.0004 19.245C8.8704 19.245 6.21537 17.135 5.2654 14.29L1.27539 17.385C3.25539 21.31 7.3104 24.0001 12.0004 24.0001Z"
+                    fill="#34A853" />
+                </svg>
+                <span class="text-sm font-semibold leading-6">Google</span>
+              </button>
+
+              <button type="button" @click="handleGitHubSignIn()"
+                class="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent">
+                <svg class="h-5 w-5 fill-[#24292F]" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                    d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm font-semibold leading-6">GitHub</span>
+              </button>
             </div>
           </div>
-          <div class="mt-2">
-            <input
-              v-model="form.password"
-              type="password"
-              autocomplete="password"
-              required
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
         </div>
-
-        <div>
-          <button
-            type="submit"
-            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Sign in
-          </button>
-        </div>
-      </form>
-
-      <div class="my-5">
-        <button
-          type="button"
-          @click="handleGoogleSignIn()"
-          class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-        >
-          <svg class="w-4 h-auto" width="46" height="47" viewBox="0 0 46 47" fill="none">
-            <path
-              d="M46 24.0287C46 22.09 45.8533 20.68 45.5013 19.2112H23.4694V27.9356H36.4069C36.1429 30.1094 34.7347 33.37 31.5957 35.5731L31.5663 35.8669L38.5191 41.2719L38.9885 41.3306C43.4477 37.2181 46 31.1669 46 24.0287Z"
-              fill="#4285F4"
-            />
-            <path
-              d="M23.4694 47C29.8061 47 35.1161 44.9144 39.0179 41.3012L31.625 35.5437C29.6301 36.9244 26.9898 37.8937 23.4987 37.8937C17.2793 37.8937 12.0281 33.7812 10.1505 28.1412L9.88649 28.1706L2.61097 33.7812L2.52296 34.0456C6.36608 41.7125 14.287 47 23.4694 47Z"
-              fill="#34A853"
-            />
-            <path
-              d="M10.1212 28.1413C9.62245 26.6725 9.32908 25.1156 9.32908 23.5C9.32908 21.8844 9.62245 20.3275 10.0918 18.8588V18.5356L2.75765 12.8369L2.52296 12.9544C0.909439 16.1269 0 19.7106 0 23.5C0 27.2894 0.909439 30.8731 2.49362 34.0456L10.1212 28.1413Z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M23.4694 9.07688C27.8699 9.07688 30.8622 10.9863 32.5344 12.5725L39.1645 6.11C35.0867 2.32063 29.8061 0 23.4694 0C14.287 0 6.36607 5.2875 2.49362 12.9544L10.0918 18.8588C11.9987 13.1894 17.25 9.07688 23.4694 9.07688Z"
-              fill="#EB4335"
-            />
-          </svg>
-          Sign in with Google
-        </button>
       </div>
-
-      <p class="mt-10 text-center text-sm text-gray-500">
-        Do not have an account?
-        {{ ' ' }}
-        <RouterLink
-          to="/sign-up"
-          class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-        >
-          Create an account
-        </RouterLink>
-      </p>
+    </div>
+    <div class="relative hidden w-0 flex-1 lg:block">
+      <img class="absolute inset-0 h-full w-full object-cover"
+        src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+        alt="" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
-import { signIn, signInWithGoogle } from '@/lib/firebase'
+import { RouterLink, useRouter } from 'vue-router'
+import { signIn, signInWithGithub, signInWithGoogle } from '@/lib/firebase'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
+import { useUserStore } from '@/stores/user'
 
 const toast = useToast()
+const router = useRouter()
 
-// const showSuccess = () => {
-//   toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
-// };
-
-// const showError = () => {
-//   toast.add({ severity: 'error', summary: 'Error Message', detail: 'Message Content', life: 3000 });
-// };
+const userStore = useUserStore();
 
 const form = ref({
   email: '',
@@ -145,7 +133,9 @@ const form = ref({
 const handleSignIn = () => {
   const { email, password } = form.value
   signIn(email, password)
-    .then(() => {
+    .then(userCredential => {
+      const user = userCredential.user
+      userStore.setUser(user)
       toast.add({
         severity: 'success',
         summary: 'Success',
@@ -154,7 +144,7 @@ const handleSignIn = () => {
       })
     })
     .then(() => {
-      window.location.href = '/dashboard'
+      router.push('/')
     })
     .catch((err) => {
       toast.add({ severity: 'error', summary: 'Error', detail: err.message, life: 3000 })
@@ -163,7 +153,9 @@ const handleSignIn = () => {
 
 const handleGoogleSignIn = () => {
   signInWithGoogle()
-    .then(() => {
+    .then(userCredential => {
+      const user = userCredential.user // Get the user from the response
+      userStore.setUser(user)
       toast.add({
         severity: 'success',
         summary: 'Success',
@@ -172,7 +164,27 @@ const handleGoogleSignIn = () => {
       })
     })
     .then(() => {
-      window.location.href = '/dashboard'
+      router.push('/')
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: 'Error', detail: err.message, life: 3000 })
+    })
+}
+
+const handleGitHubSignIn = () => {
+  signInWithGithub()
+    .then(userCredential => {
+      const user = userCredential.user // Get the user from the response
+      userStore.setUser(user)
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'GitHub sign in successfully!',
+        life: 3000
+      })
+    })
+    .then(() => {
+      router.push('/')
     })
     .catch((err) => {
       toast.add({ severity: 'error', summary: 'Error', detail: err.message, life: 3000 })
@@ -183,5 +195,3 @@ const submitForm = () => {
   handleSignIn()
 }
 </script>
-
-<style scoped></style>

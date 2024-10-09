@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <TheHeader />
-    <RouterView />
-    <TheFooter />
-  </div>
+  <TheNavbar />
+  <RouterView />
+  <TheFooter />
 </template>
 
 <script setup>
-import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
 import { RouterView } from 'vue-router'
+import TheNavbar from './components/TheNavbar.vue';
 </script>
 
 <style scoped></style>
