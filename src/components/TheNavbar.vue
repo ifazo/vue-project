@@ -34,18 +34,8 @@
                     </div>
 
                     <div v-if="user" class="ml-4 flex flex-shrink-0 items-center">
-                        <button type="button"
-                           @click="openModal = !openModal"
-                            class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                            <span class="absolute -inset-1.5" />
-                            <span class="sr-only">View Bag</span>
-                            <ShoppingBagIcon class="h-6 w-6" aria-hidden="true" />
-                        </button>
-
-                        <BagModal :isOpen="openModal" @close="openModal = false" :products="products" />
-
                         <!-- Profile dropdown -->
-                        <Menu as="div" class="relative ml-3">
+                        <Menu as="div" class="relative mx-3">
                             <div>
                                 <MenuButton
                                     class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -77,6 +67,17 @@
                                 </MenuItems>
                             </transition>
                         </Menu>
+
+                        <button type="button"
+                           @click="openModal = !openModal"
+                            class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                            <span class="absolute -inset-1.5" />
+                            <span class="sr-only">View Bag</span>
+                            <ShoppingBagIcon class="h-6 w-6" aria-hidden="true" />
+                        </button>
+
+                        <BagModal :isOpen="openModal" @close="openModal = false" :products="products" :total="cartStore.total" />
+
                     </div>
 
                 </div>
@@ -99,12 +100,13 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, ShoppingBagIcon, UserIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { signOut } from '@/lib/firebase';
 import { useUserStore } from '@/stores/user';
 import { useToast } from 'primevue/usetoast';
 import { useRouter } from 'vue-router';
 import BagModal from './BagModal.vue';
+import { useCartStore } from '@/stores/cart';
 
 const navigation = [
     { name: 'Home', href: '/', current: true },
@@ -116,37 +118,16 @@ const userNavigation = [
     { name: 'Dashboard', href: '/dashboard' },
 ]
 
-const products = [
-    {
-        id: 1,
-        name: 'Throwback Hip Bag',
-        href: '#',
-        color: 'Salmon',
-        price: '$90.00',
-        quantity: 1,
-        imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-        imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-    },
-    {
-        id: 2,
-        name: 'Medium Stuff Satchel',
-        href: '#',
-        color: 'Blue',
-        price: '$32.00',
-        quantity: 1,
-        imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-        imageAlt:
-            'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-    // More products...
-]
-
 const openModal = ref(false)
-const user = ref(null);
-const userStore = useUserStore();
 
 const toast = useToast()
 const router = useRouter()
+
+const userStore = useUserStore();
+const cartStore = useCartStore();
+
+const user = ref(null);
+const products = computed(() => cartStore.cart);
 
 onMounted(() => {
     userStore.initializeUser();
@@ -160,6 +141,7 @@ onMounted(() => {
     } else {
         user.value = null;
     }
+    cartStore.initializeCart();
 });
 
 const handleSignOut = () => {

@@ -5,7 +5,7 @@
     <div v-if="!loading && !error">
         <div class="bg-white">
             <div class="card flex justify-between">
-                <Breadcrumb :home="home" :model="items" />
+                <!-- <Breadcrumb :home="home" :model="items" /> -->
             </div>
             <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
                 <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
@@ -53,7 +53,7 @@
                             <div class="flex items-center">
                                 <div class="flex items-center">
                                     <StarIcon v-for="rating in [0, 1, 2, 3, 4]" :key="rating"
-                                        :class="[product.rating > rating ? 'text-indigo-500' : 'text-gray-300', 'h-5 w-5 flex-shrink-0']"
+                                        :class="[product.rating > rating ? 'text-yellow-300' : 'text-gray-300', 'h-5 w-5 flex-shrink-0']"
                                         aria-hidden="true" />
                                 </div>
                                 <p class="sr-only">{{ product.rating }} out of 5 stars</p>
@@ -68,15 +68,15 @@
 
                         <form class="mt-6">
                             <div class="mt-10 flex sm:flex-col1">
-                                <button type="button" @click="addToCartHandler"
+                                <button type="button" @click="addToCartHandler(product)"
                                     class="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">
                                     Add to Bag
                                 </button>
 
                                 <button type="button"
                                     class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
-                                    <HeartIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
-                                    <span class="sr-only">Add to wishlist</span>
+                                    <ShareIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
+                                    <span class="sr-only">Share</span>
                                 </button>
                             </div>
                         </form>
@@ -168,22 +168,7 @@ import {
     TabPanel,
     TabPanels,
 } from '@headlessui/vue'
-import { StarIcon } from '@heroicons/vue/20/solid'
-import { HeartIcon } from '@heroicons/vue/24/outline'
-import Breadcrumb from 'primevue/breadcrumb';
-
-const home = ref({
-    icon: 'pi pi-home'
-});
-
-const items = ref([
-    { label: 'Electronics' },
-    { label: 'Computer' },
-    { label: 'Accessories' },
-    { label: 'Keyboard' },
-    { label: 'Wireless' }
-]);
-
+import { ShareIcon, StarIcon } from '@heroicons/vue/20/solid'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import { useCartStore } from '@/stores/cart'
@@ -197,6 +182,8 @@ const id = route.params.id;
 const product = ref(null);
 const loading = ref(true);
 const error = ref(null);
+
+const cartStore = useCartStore()
 
 const fetchProduct = async () => {
     try {
@@ -214,17 +201,11 @@ const fetchProduct = async () => {
 
 onMounted(() => {
     fetchProduct();
+    cartStore.initializeCart();
 });
 
-const cartStore = useCartStore()
-
-const addToCartHandler = () => {
-    const cartItem = {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-    }
-    cartStore.addToCart(cartItem)
+const addToCartHandler = (product) => {
+    cartStore.addToCart(product)
     toast.add({ severity: 'success', summary: 'Success', detail: 'Product added to cart', life: 3000 })
 }
 

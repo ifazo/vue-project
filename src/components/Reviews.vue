@@ -39,7 +39,6 @@
 
 <script setup>
 import { StarIcon } from '@heroicons/vue/20/solid'
-import { defineProps } from 'vue';
 
 const props = defineProps({
     reviews: {

@@ -33,24 +33,28 @@
                                         <div class="mt-8">
                                             <div class="flow-root">
                                                 <ul role="list" class="-my-6 divide-y divide-gray-200">
-                                                    <li v-for="product in products" :key="product.id" class="flex py-6">
+                                                    <li v-for="product in products" :key="product._id" class="flex py-6">
                                                         <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                            <img :src="product.imageSrc" :alt="product.imageAlt"
+                                                            <img :src="product.thumbnail" :alt="product.title"
                                                                 class="h-full w-full object-cover object-center" />
                                                         </div>
 
                                                         <div class="ml-4 flex flex-1 flex-col">
                                                             <div>
                                                                 <div class="flex justify-between text-base font-medium text-gray-900">
-                                                                    <h3><a :href="product.href">{{ product.name }}</a></h3>
+                                                                    <h3><a :href="product._id">{{ product.title }}</a></h3>
                                                                     <p class="ml-4">{{ product.price }}</p>
                                                                 </div>
-                                                                <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
+                                                                <p class="mt-1 text-sm text-gray-500">{{ product.brand }}</p>
                                                             </div>
                                                             <div class="flex flex-1 items-end justify-between text-sm">
-                                                                <p class="text-gray-500">Qty {{ product.quantity }}</p>
+                                                                <p class="text-gray-500">Qty: {{ product.quantity }}</p>
                                                                 <div class="flex">
-                                                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                                                    <button type="button"
+                                                                    @click="removeFromCart(product._id)"
+                                                                     class="font-medium text-indigo-600 hover:text-indigo-500">
+                                                                     Remove
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -63,7 +67,7 @@
                                     <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
                                         <div class="flex justify-between text-base font-medium text-gray-900">
                                             <p>Subtotal</p>
-                                            <p>$262.00</p>
+                                            <p>${{ total }}</p>
                                         </div>
                                         <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                         <div class="mt-6">
@@ -89,13 +93,25 @@
 </template>
 
 <script setup>
+import { useCartStore } from '@/stores/cart';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { defineProps } from 'vue';
+import { onMounted } from 'vue';
 
 const props = defineProps({
     isOpen: Boolean,
     onClose: Function,
     products: Array,
+    total: Number
 })
+
+const cartStore = useCartStore()
+
+const removeFromCart = (id) => {
+    cartStore.removeFromCart(id)
+}
+
+onMounted(() => {
+  cartStore.initializeCart();
+});
 </script>

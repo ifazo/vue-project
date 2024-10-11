@@ -7,23 +7,16 @@ export const useUserStore = defineStore('user', () => {
   function setUser(userData) {
     user.value = userData
     localStorage.setItem('user', JSON.stringify(userData))
-    console.log('User set in localStorage:', userData) // Debugging
   }
 
   function clearUser() {
     user.value = null
     localStorage.removeItem('user')
-    console.log('User cleared from localStorage') // Debugging
   }
 
   function initializeUser() {
     const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      user.value = JSON.parse(storedUser)
-      console.log('User initialized from localStorage:', user.value) // Debugging
-    } else {
-      console.log('No user found in localStorage') // Debugging
-    }
+    user.value = JSON.parse(storedUser)
   }
 
   return { user, setUser, clearUser, initializeUser }
