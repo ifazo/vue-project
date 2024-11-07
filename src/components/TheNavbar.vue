@@ -68,15 +68,15 @@
                             </transition>
                         </Menu>
 
-                        <button type="button"
-                           @click="openModal = !openModal"
+                        <button type="button" @click="openModal = !openModal"
                             class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span class="absolute -inset-1.5" />
                             <span class="sr-only">View Bag</span>
                             <ShoppingBagIcon class="h-6 w-6" aria-hidden="true" />
                         </button>
 
-                        <BagModal :isOpen="openModal" @close="openModal = false" :products="products" :total="cartStore.total" />
+                        <BagModal :isOpen="openModal" @close="openModal = false" :products="products"
+                            :total="cartStore.total" />
 
                     </div>
 
@@ -87,10 +87,12 @@
 
         <DisclosurePanel class="md:hidden">
             <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                <DisclosureButton v-for="item in navigation" :key="item.name" as="div"
+                <DisclosureButton v-for="item in navigation" :key="item.href" as="div"
                     :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
                     :aria-current="item.current ? 'page' : undefined">
-                    <RouterLink :to="item.href">{{ item.name }}</RouterLink>
+                    <RouterLink :to="item.href" class="block w-full h-full">
+                        {{ item.name }}
+                    </RouterLink>
                 </DisclosureButton>
             </div>
         </DisclosurePanel>

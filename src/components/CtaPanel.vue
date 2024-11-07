@@ -25,11 +25,10 @@
         </svg>
         <div class="mx-auto max-w-md text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left">
           <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Boost your productivity.<br />Start using our app today.
+            Explore your favorite products<br />Keep browsing
           </h2>
           <p class="mt-6 text-lg leading-8 text-gray-300">
-            Ac euismod vel sit maecenas id pellentesque eu sed consectetur. Malesuada adipiscing
-            sagittis vel nulla.
+            Online shopping made easy. Find your favorite products and keep browsing to discover more.
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
             <a
@@ -45,7 +44,7 @@
         <div class="relative mt-16 h-80 lg:mt-8">
           <img
             class="absolute left-0 top-0 w-[57rem] max-w-none rounded-md bg-white/5 ring-1 ring-white/10"
-            src="https://tailwindui.com/img/component-images/dark-project-app-screenshot.png"
+            src="https://cdn.vectorstock.com/i/500p/40/25/shopping-online-in-smartphone-application-vector-33184025.jpg"
             alt="App screenshot"
             width="1824"
             height="1080"

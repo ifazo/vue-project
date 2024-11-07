@@ -40,6 +40,16 @@ const router = createRouter({
       component: () => import('@/views/SignUpView.vue')
     },
     {
+      path: '/success',
+      name: 'success',
+      component: () => import('@/views/SuccessView.vue')
+    },
+    {
+      path: '/cancel',
+      name: 'cancel',
+      component: () => import('@/views/CancelView.vue')
+    },
+    {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('@/views/DashboardView.vue')

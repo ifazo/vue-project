@@ -6,9 +6,9 @@
         <!-- Grid -->
         <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             <!-- Card -->
-            <a v-for="category in categories" :key="category.slug"
+            <RouterLink v-for="category in categories" :key="category.slug"
                 class="group flex flex-col bg-white border shadow-sm rounded-xl hover:shadow-md focus:outline-none focus:shadow-md transition dark:bg-neutral-900 dark:border-neutral-800"
-                :href="`/categories/${category.slug}`">
+                :to="`/categories/${category.slug}`">
                 <div class="p-4 md:p-5">
                     <div class="flex justify-between items-center gap-x-3">
                         <div class="grow">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-            </a>
+            </RouterLink>
             <!-- End Card -->
         </div>
         <!-- End Grid -->

@@ -2,12 +2,12 @@
   <div v-if="loading">Loading...</div>
   <div v-else-if="error">Error loading products: {{ error.message }}</div>
   <div v-else>
-    <ProductList :products="products" />
+    <CategoryProducts :products="products" />
   </div>
 </template>
 
 <script setup>
-import ProductList from '@/components/ProductList.vue';
+import CategoryProducts from '@/components/CategoryProducts.vue';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 

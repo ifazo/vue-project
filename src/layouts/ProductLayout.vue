@@ -126,7 +126,7 @@
                                 <div class="py-1">
                                     <MenuItem v-for="option in sortOptions" :key="option.name" v-slot="{ active }">
                                     <button @click="changeSort(option)"
-                                        :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">
+                                        :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'w-full text-left block px-4 py-2 text-sm']">
                                         {{ option.name }}
                                     </button>
                                     </MenuItem>
@@ -214,7 +214,7 @@
                 </div>
             </div>
             <!-- Products list -->
-            <ProductList :products="products" :loading="loading" :error="error" />
+            <ProductsList :products="products" :loading="loading" :error="error" />
             <!-- Pagination -->
             <Pagination :totalRecords="totalProducts" @updatePagination="handlePagination" />
         </section>
@@ -242,8 +242,8 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-import ProductList from '@/components/ProductList.vue'
 import Pagination from '@/components/Pagination.vue'
+import ProductsList from '@/components/ProductsList.vue'
 
 const sortOptions = ref([
     { name: 'Ascending', current: true },
@@ -284,15 +284,18 @@ const sortBy = ref('title');
 const sortOrder = ref('asc');
 
 const fetchProducts = async () => {
+    loading.value = true;
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/products?limit=${limit.value}&skip=${skip.value}&price=${price.value}&rating=${rating.value}&sortBy=${sortBy.value}&sort=${sortOrder.value}`);
+        const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/products?limit=${limit.value}&skip=${skip.value}&price=${price.value}&rating=${rating.value}&sortBy=${sortBy.value}&sort=${sortOrder.value}`
+        );
         const data = await response.json();
 
         products.value = data.products;
         totalProducts.value = data.totalProducts;
-        loading.value = false;
     } catch (err) {
         error.value = err.message;
+    } finally {
         loading.value = false;
     }
 };
@@ -329,35 +332,34 @@ const changeSort = (option) => {
 
     switch (option.name) {
         case 'Ascending':
-            sortOrder.value = 'asc';
-            sortBy.value = 'title';
+            sortBy.value = 'title';  // Sort by title
+            sortOrder.value = 'asc'; // Ascending order
             break;
         case 'Descending':
-            sortOrder.value = 'desc';
-            sortBy.value = 'title';
+            sortBy.value = 'title';  // Sort by title
+            sortOrder.value = 'desc'; // Descending order
             break;
         case 'Most popular':
-            sortOrder.value = 'desc';
-            sortBy.value = 'rating';
+            sortBy.value = 'rating';  // Sort by rating
+            sortOrder.value = 'desc'; // High to low rating
             break;
         case 'Least popular':
-            sortOrder.value = 'asc';
-            sortBy.value = 'rating';
+            sortBy.value = 'rating';  // Sort by rating
+            sortOrder.value = 'asc';  // Low to high rating
             break;
         case 'Expensive':
-            sortOrder.value = 'desc';
-            sortBy.value = 'price';
+            sortBy.value = 'price';   // Sort by price
+            sortOrder.value = 'desc'; // High to low price
             break;
         case 'Cheapest':
-            sortOrder.value = 'asc';
-            sortBy.value = 'price';
+            sortBy.value = 'price';   // Sort by price
+            sortOrder.value = 'asc';  // Low to high price
             break;
         default:
-            sortOrder.value = 'asc';
-            sortBy.value = 'title';
+            sortBy.value = 'title';   // Default to sorting by title
+            sortOrder.value = 'asc';  // Ascending order
             break;
     }
-
     fetchProducts();
 };
 

@@ -18,7 +18,8 @@
                                 <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                                     <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                                         <div class="flex items-start justify-between">
-                                            <DialogTitle class="text-lg font-medium text-gray-900">Shopping cart</DialogTitle>
+                                            <DialogTitle class="text-lg font-medium text-gray-900">Shopping cart
+                                            </DialogTitle>
                                             <div class="ml-3 flex h-7 items-center">
                                                 <button type="button"
                                                     class="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
@@ -33,27 +34,32 @@
                                         <div class="mt-8">
                                             <div class="flow-root">
                                                 <ul role="list" class="-my-6 divide-y divide-gray-200">
-                                                    <li v-for="product in products" :key="product._id" class="flex py-6">
-                                                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                    <li v-for="product in products" :key="product._id"
+                                                        class="flex py-6">
+                                                        <div
+                                                            class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                             <img :src="product.thumbnail" :alt="product.title"
                                                                 class="h-full w-full object-cover object-center" />
                                                         </div>
 
                                                         <div class="ml-4 flex flex-1 flex-col">
                                                             <div>
-                                                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                                                    <h3><a :href="product._id">{{ product.title }}</a></h3>
+                                                                <div
+                                                                    class="flex justify-between text-base font-medium text-gray-900">
+                                                                    <h3><a :href="product._id">{{ product.title }}</a>
+                                                                    </h3>
                                                                     <p class="ml-4">{{ product.price }}</p>
                                                                 </div>
-                                                                <p class="mt-1 text-sm text-gray-500">{{ product.brand }}</p>
+                                                                <p class="mt-1 text-sm text-gray-500">{{ product.brand
+                                                                    }}</p>
                                                             </div>
                                                             <div class="flex flex-1 items-end justify-between text-sm">
                                                                 <p class="text-gray-500">Qty: {{ product.quantity }}</p>
                                                                 <div class="flex">
                                                                     <button type="button"
-                                                                    @click="removeFromCart(product._id)"
-                                                                     class="font-medium text-indigo-600 hover:text-indigo-500">
-                                                                     Remove
+                                                                        @click="removeFromCart(product._id)"
+                                                                        class="font-medium text-indigo-600 hover:text-indigo-500">
+                                                                        Remove
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -69,14 +75,20 @@
                                             <p>Subtotal</p>
                                             <p>${{ total }}</p>
                                         </div>
-                                        <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                                        <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at
+                                            checkout.</p>
                                         <div class="mt-6">
-                                            <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+                                            <button @click="handlePayment(products, displayName, email)"
+                                                class="w-full text-left flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                                                Checkout
+                                            </button>
                                         </div>
                                         <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
                                             <p>
                                                 or{{ ' ' }}
-                                                <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="onClose">
+                                                <button type="button"
+                                                    class="font-medium text-indigo-600 hover:text-indigo-500"
+                                                    @click="onClose">
                                                     Continue Shopping<span aria-hidden="true"> &rarr;</span>
                                                 </button>
                                             </p>
@@ -94,8 +106,10 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart';
+import { useUserStore } from '@/stores/user';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
+import { loadStripe } from '@stripe/stripe-js';
 import { onMounted } from 'vue';
 
 const props = defineProps({
@@ -105,13 +119,39 @@ const props = defineProps({
     total: Number
 })
 
+const stripePromise = loadStripe(import.meta.env.VITE_PUBLISHABLE_KEY);
+
+const userStore = useUserStore();
 const cartStore = useCartStore()
+
+const { displayName, email } = userStore.user;
+
+const handlePayment = async (products, displayName, email) => {
+    const stripe = await stripePromise;
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/payment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ products, name: displayName, email }),
+    });
+
+    const session = await response.json();
+
+    const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+    if (result.error) {
+        console.error(result.error.message);
+    }
+};
 
 const removeFromCart = (id) => {
     cartStore.removeFromCart(id)
 }
 
 onMounted(() => {
-  cartStore.initializeCart();
+    userStore.initializeUser();
+    cartStore.initializeCart();
 });
 </script>
