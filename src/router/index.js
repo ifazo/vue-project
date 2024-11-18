@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { auth } from '@/lib/firebase';
+import { useToast } from 'primevue/usetoast';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,7 +54,8 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('@/views/DashboardView.vue')
+      component: () => import('@/views/DashboardView.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/:pathMatch(.*)*',
@@ -61,5 +64,19 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const toast = useToast();
+    if (auth.currentUser) {
+      next();
+    } else {
+      toast.add({ severity: 'warn', summary: 'Warning', detail: "Sign in to view Dashboard", life: 3000 })
+      next({ name: "signin" });
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

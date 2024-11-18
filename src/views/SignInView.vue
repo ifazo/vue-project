@@ -106,7 +106,7 @@
     </div>
     <div class="relative hidden w-0 flex-1 lg:block">
       <img class="absolute inset-0 h-full w-full object-cover"
-        src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+        src="https://cdn.vectorstock.com/i/500p/40/25/shopping-online-in-smartphone-application-vector-33184025.jpg"
         alt="" />
     </div>
   </div>
@@ -130,6 +130,10 @@ const form = ref({
   password: ''
 })
 
+const submitForm = () => {
+  handleSignIn()
+}
+
 const handleSignIn = () => {
   const { email, password } = form.value
   signIn(email, password)
@@ -142,8 +146,6 @@ const handleSignIn = () => {
         detail: 'Sign in successfully!',
         life: 3000
       })
-    })
-    .then(() => {
       router.push('/')
     })
     .catch((err) => {
@@ -154,7 +156,7 @@ const handleSignIn = () => {
 const handleGoogleSignIn = () => {
   signInWithGoogle()
     .then(userCredential => {
-      const user = userCredential.user // Get the user from the response
+      const user = userCredential.user
       userStore.setUser(user)
       toast.add({
         severity: 'success',
@@ -162,8 +164,6 @@ const handleGoogleSignIn = () => {
         detail: 'Google sign in successfully!',
         life: 3000
       })
-    })
-    .then(() => {
       router.push('/')
     })
     .catch((err) => {
@@ -174,7 +174,7 @@ const handleGoogleSignIn = () => {
 const handleGitHubSignIn = () => {
   signInWithGithub()
     .then(userCredential => {
-      const user = userCredential.user // Get the user from the response
+      const user = userCredential.user
       userStore.setUser(user)
       toast.add({
         severity: 'success',
@@ -182,8 +182,6 @@ const handleGitHubSignIn = () => {
         detail: 'GitHub sign in successfully!',
         life: 3000
       })
-    })
-    .then(() => {
       router.push('/')
     })
     .catch((err) => {
@@ -191,7 +189,4 @@ const handleGitHubSignIn = () => {
     })
 }
 
-const submitForm = () => {
-  handleSignIn()
-}
 </script>

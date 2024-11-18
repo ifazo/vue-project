@@ -1,118 +1,140 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-    <div class="bg-white">
-        <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-0">
-            <h1 class="text-3xl font-extrabold text-center tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
-
-            <form class="mt-12">
-                <section aria-labelledby="cart-heading">
-                    <h2 id="cart-heading" class="sr-only">Items in your shopping cart</h2>
-
-                    <ul role="list" class="border-t border-b border-gray-200 divide-y divide-gray-200">
-                        <li v-for="product in products" :key="product.id" class="flex py-6">
-                            <div class="flex-shrink-0">
-                                <img :src="product.imageSrc" :alt="product.imageAlt"
-                                    class="w-24 h-24 rounded-md object-center object-cover sm:w-32 sm:h-32" />
-                            </div>
-
-                            <div class="ml-4 flex-1 flex flex-col sm:ml-6">
-                                <div>
-                                    <div class="flex justify-between">
-                                        <h4 class="text-sm">
-                                            <a :href="product.href"
-                                                class="font-medium text-gray-700 hover:text-gray-800">
-                                                {{ product.name }}
-                                            </a>
-                                        </h4>
-                                        <p class="ml-4 text-sm font-medium text-gray-900">{{ product.price }}</p>
-                                    </div>
-                                    <p class="mt-1 text-sm text-gray-500">
-                                        {{ product.color }}
-                                    </p>
-                                    <p class="mt-1 text-sm text-gray-500">
-                                        {{ product.size }}
-                                    </p>
+    <Toast />
+    <div class="card">
+        <DataView :value="products">
+            <template #list="slotProps">
+                <div class="flex flex-col">
+                    <div v-for="(item, index) in slotProps.items" :key="index">
+                        <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4"
+                            :class="{ 'border-t border-surface-200 dark:border-surface-700': index !== 0 }">
+                            <div class="md:w-40 relative">
+                                <img class="block xl:block mx-auto rounded w-full" :src="item.thumbnail"
+                                    :alt="item.title" />
+                                <div class="absolute bg-black/70 rounded-border" style="left: 4px; top: 4px">
+                                    <Tag :value="item.availabilityStatus" :severity="getSeverity(item)"></Tag>
                                 </div>
-
-                                <div class="mt-4 flex-1 flex items-end justify-between">
-                                    <p class="flex items-center text-sm text-gray-700 space-x-2">
-                                        <CheckIcon v-if="product.inStock" class="flex-shrink-0 h-5 w-5 text-green-500"
-                                            aria-hidden="true" />
-                                        <ClockIcon v-else class="flex-shrink-0 h-5 w-5 text-gray-300"
-                                            aria-hidden="true" />
-                                        <span>{{ product.inStock ? 'In stock' : `Will ship in ${product.leadTime}`
-                                            }}</span>
-                                    </p>
-                                    <div class="ml-4">
-                                        <button type="button"
-                                            class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                            <span>Remove</span>
-                                        </button>
+                            </div>
+                            <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                    <div>
+                                        <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{
+                                            item.brand }}</span>
+                                        <div class="text-xl font-semibold mt-2">{{ item.title }}</div>
+                                    </div>
+                                    <div class="bg-surface-100 p-1" style="border-radius: 30px">
+                                        <div class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
+                                            style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
+                                            <span class="text-surface-900 font-medium text-sm">{{ item.rating }}</span>
+                                            <i class="pi pi-star-fill text-yellow-500"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col md:items-end gap-4">
+                                    <span class="text-lg font-medium">${{ item.price }}</span>
+                                    <span class="text-base font-medium">Quantity: {{ item.quantity }}</span>
+                                    <div class="flex flex-row-reverse md:flex-row gap-2">
+                                        <Button @click="removeFromCart(item._id)" icon="pi pi-trash" severity="danger"
+                                            outlined></Button>
+                                        <Button @click="handlePayment([item], displayName, email)"
+                                            icon="pi pi-shopping-cart" label="Buy Now" severity="secondary"
+                                            :disabled="item.availabilityStatus === 'Out of Stock'"
+                                            class="flex-auto md:flex-initial whitespace-nowrap"></Button>
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
-                </section>
-
-                <!-- Order summary -->
-                <section aria-labelledby="summary-heading" class="mt-10">
-                    <h2 id="summary-heading" class="sr-only">Order summary</h2>
-
-                    <div>
-                        <dl class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <dt class="text-base font-medium text-gray-900">Subtotal</dt>
-                                <dd class="ml-4 text-base font-medium text-gray-900">$96.00</dd>
-                            </div>
-                        </dl>
-                        <p class="mt-1 text-sm text-gray-500">Shipping and taxes will be calculated at checkout.</p>
+                        </div>
                     </div>
-
-                    <div class="mt-10">
-                        <button type="submit"
-                            class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">Checkout</button>
-                    </div>
-
-                    <div class="mt-6 text-sm text-center">
-                        <p>
-                            or <a href="#" class="text-indigo-600 font-medium hover:text-indigo-500">Continue
-                                Shopping<span aria-hidden="true"> &rarr;</span></a>
-                        </p>
-                    </div>
-                </section>
-            </form>
+                </div>
+            </template>
+        </DataView>
+        <Divider />
+        <div class="flex justify-between m-8">
+            <div class="text-xl font-semibold mt-2">Total amount: ${{ cartStore.total.toFixed(2) }}</div>
+            <Button @click="handlePayment(products, displayName, email)" icon="pi pi-send" :label="'Pay $' + cartStore.total.toFixed(2)"
+                severity="secondary" :disabled="cartStore.total === 0"
+                class="flex-auto md:flex-initial whitespace-nowrap px-8" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { CheckIcon, ClockIcon } from '@heroicons/vue/20/solid'
+import DataView from 'primevue/dataview';
+import Button from "primevue/button";
+import { loadStripe } from '@stripe/stripe-js';
+import { useCartStore } from '@/stores/cart';
+import { useUserStore } from '@/stores/user';
+import { computed, onMounted } from 'vue';
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
+import Divider from 'primevue/divider';
 
-const products = [
-    {
-        id: 1,
-        name: 'Artwork Tee',
-        href: '#',
-        price: '$32.00',
-        color: 'Mint',
-        size: 'Medium',
-        inStock: true,
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/checkout-page-03-product-04.jpg',
-        imageAlt: 'Front side of mint cotton t-shirt with wavey lines pattern.',
-    },
-    {
-        id: 2,
-        name: 'Basic Tee',
-        href: '#',
-        price: '$32.00',
-        color: 'Charcoal',
-        inStock: false,
-        leadTime: '7-8 years',
-        size: 'Large',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
-        imageAlt: 'Front side of charcoal cotton t-shirt.',
-    },
-    // More products...
-]
+const props = defineProps({
+    products: {
+        type: Array,
+        required: true,
+    }
+})
+
+const toast = useToast();
+
+const stripePromise = loadStripe(import.meta.env.VITE_PUBLISHABLE_KEY);
+
+const cartStore = useCartStore()
+const userStore = useUserStore();
+
+const user = computed(() => userStore.user);
+const displayName = computed(() => user.value?.displayName || '');
+const email = computed(() => user.value?.email || '');
+
+const handlePayment = async (products, displayName, email) => {
+    const stripe = await stripePromise;
+    if (!stripe) {
+        return;
+    }
+    if (!displayName || !email) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Please sign in to continue' });
+        return router.push('/sion-in');
+    }
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/payment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ products, name: displayName, email }),
+    });
+
+    const session = await response.json();
+
+    const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+    if (result.error) {
+        console.error(result.error.message);
+    }
+};
+
+const removeFromCart = (id) => {
+    cartStore.removeFromCart(id)
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Product removed from cart' });
+}
+
+onMounted(() => {
+    userStore.initializeUser();
+    cartStore.initializeCart();
+});
+
+const getSeverity = (product) => {
+    switch (product.inventoryStatus) {
+        case 'In Stock':
+            return 'success';
+
+        case 'Low Stock':
+            return 'warn';
+
+        case 'Out of Stock':
+            return 'danger';
+
+        default:
+            return null;
+    }
+};
 </script>

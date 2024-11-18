@@ -1,3 +1,7 @@
+<script setup>
+import { RouterLink } from 'vue-router';
+</script>
+
 <template>
   <div class="bg-white">
     <div class="mx-auto max-w-7xl p-12">
@@ -25,20 +29,19 @@
         </svg>
         <div class="mx-auto max-w-md text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left">
           <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Explore your favorite products<br />Keep browsing
+            Explore your favorite products<br />with vue
           </h2>
           <p class="mt-6 text-lg leading-8 text-gray-300">
             Online shopping made easy. Find your favorite products and keep browsing to discover more.
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
-            <a
-              href="#"
+            <RouterLink to="/products"
               class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >Get started</a
-            >
-            <a href="#" class="text-sm font-semibold leading-6 text-white"
-              >Learn more <span aria-hidden="true">→</span></a
-            >
+              >Explore
+            </RouterLink>
+            <RouterLink to="/sign-in" class="text-sm font-semibold leading-6 text-white"
+              >Sign in <span aria-hidden="true">→</span>
+            </RouterLink>
           </div>
         </div>
         <div class="relative mt-16 h-80 lg:mt-8">

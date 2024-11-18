@@ -9,7 +9,7 @@ export const useUserStore = defineStore('user', () => {
     localStorage.setItem('user', JSON.stringify(userData))
   }
 
-  function clearUser() {
+  function removeUser() {
     user.value = null
     localStorage.removeItem('user')
   }
@@ -19,5 +19,5 @@ export const useUserStore = defineStore('user', () => {
     user.value = JSON.parse(storedUser)
   }
 
-  return { user, setUser, clearUser, initializeUser }
+  return { user, setUser, removeUser, initializeUser }
 })

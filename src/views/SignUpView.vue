@@ -123,7 +123,7 @@
         </div>
         <div class="relative hidden w-0 flex-1 lg:block">
             <img class="absolute inset-0 h-full w-full object-cover"
-                src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+                src="https://cdn.vectorstock.com/i/500p/40/25/shopping-online-in-smartphone-application-vector-33184025.jpg"
                 alt="" />
         </div>
     </div>
@@ -148,6 +148,10 @@ const form = ref({
     password: ''
 })
 
+const submitForm = () => {
+    handleSignUp()
+}
+
 const handleSignUp = () => {
     const { email, password } = form.value
     signUp(email, password)
@@ -160,8 +164,6 @@ const handleSignUp = () => {
                 detail: 'User create successfully!',
                 life: 3000
             })
-        })
-        .then(() => {
             router.push('/')
         })
         .catch((err) => {
@@ -180,8 +182,6 @@ const handleGoogleSignIn = () => {
                 detail: 'User create by google successfully!',
                 life: 3000
             })
-        })
-        .then(() => {
             router.push('/')
         })
         .catch((err) => {
@@ -200,8 +200,6 @@ const handleGitHubSignIn = () => {
                 detail: 'User create by gitHub successfully!',
                 life: 3000
             })
-        })
-        .then(() => {
             router.push('/')
         })
         .catch((err) => {
@@ -209,9 +207,6 @@ const handleGitHubSignIn = () => {
         })
 }
 
-const submitForm = () => {
-    handleSignUp()
-}
 </script>
 
 <style scoped></style>

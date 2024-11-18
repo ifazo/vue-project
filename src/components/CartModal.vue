@@ -1,4 +1,5 @@
 <template>
+    <Toast />
     <TransitionRoot as="template" :show="isOpen">
         <Dialog class="relative z-10" @close="onClose">
             <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0"
@@ -31,7 +32,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="mt-8">
+                                        <div v-if="products.length === 0" class="mt-8">
+                                            <div className="flex items-center justify-center h-full">
+                                                <p className="text-gray-500 text-lg">
+                                                    No products in the cart
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div v-else class="mt-8">
                                             <div class="flow-root">
                                                 <ul role="list" class="-my-6 divide-y divide-gray-200">
                                                     <li v-for="product in products" :key="product._id"
@@ -70,7 +78,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+                                    <div v-if="products.length !== 0" class="border-t border-gray-200 px-4 py-6 sm:px-6">
                                         <div class="flex justify-between text-base font-medium text-gray-900">
                                             <p>Subtotal</p>
                                             <p>${{ total }}</p>
@@ -110,7 +118,13 @@ import { useUserStore } from '@/stores/user';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { loadStripe } from '@stripe/stripe-js';
-import { onMounted } from 'vue';
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
+import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const toast = useToast();
 
 const props = defineProps({
     isOpen: Boolean,
@@ -121,14 +135,22 @@ const props = defineProps({
 
 const stripePromise = loadStripe(import.meta.env.VITE_PUBLISHABLE_KEY);
 
-const userStore = useUserStore();
 const cartStore = useCartStore()
+const userStore = useUserStore();
 
-const { displayName, email } = userStore.user;
+const user = computed(() => userStore.user);
+const displayName = computed(() => user.value?.displayName || '');
+const email = computed(() => user.value?.email || '');
 
 const handlePayment = async (products, displayName, email) => {
     const stripe = await stripePromise;
-
+    if (!stripe) {
+        return;
+    }
+    if (!displayName || !email) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Please sign in to continue' });
+        return router.push('/sion-in');
+    }
     const response = await fetch(`${import.meta.env.VITE_API_URL}/payment`, {
         method: 'POST',
         headers: {
