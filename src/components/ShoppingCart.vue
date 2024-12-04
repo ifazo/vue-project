@@ -93,7 +93,7 @@ const handlePayment = async (products, displayName, email) => {
     }
     if (!displayName || !email) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Please sign in to continue' });
-        return router.push('/sion-in');
+        return router.push('/sign-in');
     }
     const response = await fetch(`${import.meta.env.VITE_API_URL}/payment`, {
         method: 'POST',

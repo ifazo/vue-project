@@ -149,7 +149,7 @@ const handlePayment = async (products, displayName, email) => {
     }
     if (!displayName || !email) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Please sign in to continue' });
-        return router.push('/sion-in');
+        return router.push('/sign-in');
     }
     const response = await fetch(`${import.meta.env.VITE_API_URL}/payment`, {
         method: 'POST',
@@ -158,11 +158,8 @@ const handlePayment = async (products, displayName, email) => {
         },
         body: JSON.stringify({ products, name: displayName, email }),
     });
-
     const session = await response.json();
-
     const result = await stripe.redirectToCheckout({ sessionId: session.id });
-
     if (result.error) {
         console.error(result.error.message);
     }
